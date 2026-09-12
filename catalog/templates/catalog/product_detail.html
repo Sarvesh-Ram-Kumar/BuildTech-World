@@ -1,53 +1,128 @@
 {% extends 'catalog/base.html' %}
-
 {% block title %}{{ product.name }} — BuildTech World{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'product_list' %}">Products</a></li>
-        <li class="breadcrumb-item active">{{ product.name }}</li>
-    </ol>
-</nav>
+<div class="container py-4">
 
-<div class="row">
-    <!-- Product Image -->
-    <div class="col-md-5">
-        {% if product.image_url %}
-        <img src="{{ product.image_url }}" class="img-fluid rounded shadow" 
-             alt="{{ product.name }}">
-        {% else %}
-        <div class="bg-light d-flex align-items-center justify-content-center rounded" 
-             style="height:350px;">
-            <i class="bi bi-image text-secondary" style="font-size:5rem;"></i>
-        </div>
-        {% endif %}
-    </div>
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'product_list' %}">Products</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'product_list' %}?category={{ product.category.slug }}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active">{{ product.name }}</li>
+        </ol>
+    </nav>
 
-    <!-- Product Info -->
-    <div class="col-md-7">
-        <span class="badge bg-primary mb-2">{{ product.category.name }}</span>
-        <h2>{{ product.name }}</h2>
-        <h3 class="text-success">₹{{ product.price }}</h3>
-        <p class="text-muted">{{ product.description }}</p>
-        <hr>
-        <div class="d-flex align-items-center mb-3">
-            <i class="bi bi-building me-2 text-primary fs-5"></i>
-            <div>
-                <small class="text-muted">Supplied by</small>
-                <p class="mb-0 fw-bold">{{ product.company.name }}</p>
-                <small class="text-muted">
-                    {{ product.company.get_type_display }} — {{ product.company.location }}
-                </small>
+    <div class="row g-5">
+
+        <!-- Image Panel -->
+        <div class="col-lg-5">
+            <div class="card-img-placeholder rounded-3" style="height:360px;border-radius:var(--radius-lg)!important;">
+                <i class="bi bi-box-seam" style="font-size:4rem;"></i>
+                <span style="font-size:0.9rem;">{{ product.category.name }}</span>
+            </div>
+            <!-- Thumbnail row placeholder -->
+            <div class="d-flex gap-2 mt-3">
+                {% for i in "123" %}
+                <div class="card-img-placeholder rounded-2 flex-fill" style="height:70px;">
+                    <i class="bi bi-image" style="font-size:1.2rem;"></i>
+                </div>
+                {% endfor %}
             </div>
         </div>
-        <button class="btn btn-primary btn-lg me-2">
-            <i class="bi bi-bookmark"></i> Save to Collection
-        </button>
-        <button class="btn btn-outline-primary btn-lg">
-            <i class="bi bi-envelope"></i> Contact Company
-        </button>
+
+        <!-- Product Info -->
+        <div class="col-lg-7">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="product-badge">{{ product.category.name }}</span>
+                {% if product.company.verified %}
+                <span class="product-badge" style="background:#ECFDF5;color:var(--accent-teal);border-color:#A7F3D0;">
+                    <i class="bi bi-patch-check-fill me-1"></i>Verified Supplier
+                </span>
+                {% endif %}
+            </div>
+
+            <h1 style="font-size:1.8rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.3px;">
+                {{ product.name }}
+            </h1>
+
+            <div class="d-flex align-items-center gap-3 my-3">
+                <span class="price-tag" style="font-size:1.8rem;">₹{{ product.price }}</span>
+                <span class="text-muted small">ex. GST</span>
+            </div>
+
+            <p style="color:var(--text-muted);line-height:1.8;font-size:0.93rem;">{{ product.description }}</p>
+
+            <!-- Tags -->
+            <div class="mb-3">
+                <span class="tag-pill"><i class="bi bi-building me-1"></i>Construction</span>
+                <span class="tag-pill"><i class="bi bi-check-circle me-1"></i>In Stock</span>
+                <span class="tag-pill"><i class="bi bi-truck me-1"></i>Fast Delivery</span>
+            </div>
+
+            <hr style="border-color:var(--border-light)">
+
+            <!-- Company Info -->
+            <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-4"
+                 style="background:var(--purple-light);border:1px solid var(--border-light)">
+                <div class="feature-icon-wrap mb-0" style="flex-shrink:0">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Supplied by</div>
+                    <div style="font-weight:700;color:var(--text-primary);">{{ product.company.name }}</div>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">
+                        {{ product.company.get_type_display }} · {{ product.company.location }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-3 flex-wrap">
+                <button class="btn btn-purple btn-lg">
+                    <i class="bi bi-envelope me-2"></i>Contact Supplier
+                </button>
+                <button class="btn btn-outline-purple btn-lg">
+                    <i class="bi bi-heart me-2"></i>Save
+                </button>
+                <button class="btn btn-outline-purple btn-lg">
+                    <i class="bi bi-share me-2"></i>Share
+                </button>
+            </div>
+
+            <!-- Help Text -->
+            <p class="text-muted small mt-3 mb-0">
+                <i class="bi bi-shield-check me-1" style="color:var(--accent-teal)"></i>
+                Safe enquiry — your contact details are never shared without your permission.
+            </p>
+        </div>
     </div>
+
+    <!-- Related / Extra Info -->
+    <div class="row g-4 mt-4">
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon-wrap"><i class="bi bi-truck"></i></div>
+                <h6 class="fw-700">Delivery</h6>
+                <p class="text-muted small mb-0">Available across India. Delivery timelines depend on your location and supplier.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon-wrap"><i class="bi bi-arrow-counterclockwise"></i></div>
+                <h6 class="fw-700">Returns</h6>
+                <p class="text-muted small mb-0">Return and replacement policies vary by supplier. Contact them directly for details.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon-wrap"><i class="bi bi-headset"></i></div>
+                <h6 class="fw-700">Support</h6>
+                <p class="text-muted small mb-0">Need help? Our support team is available to assist with product enquiries.</p>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

@@ -1,96 +1,171 @@
 {% extends 'catalog/base.html' %}
-
 {% block title %}Products — BuildTech World{% endblock %}
 
 {% block content %}
-<div class="row">
-    <!-- Sidebar filters -->
-    <div class="col-md-3">
-        <div class="card shadow-sm">
-            <div class="card-header bg-dark text-white">
-                <i class="bi bi-funnel"></i> Filters
-            </div>
-            <div class="card-body">
+<div class="container py-4">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active">Products</li>
+            </ol>
+        </nav>
+        <h2 class="section-title mb-0">All Products</h2>
+        <hr class="section-divider">
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="filter-card">
+                <div class="filter-header">
+                    <i class="bi bi-funnel me-2"></i>Filters
+                </div>
+
                 <form method="GET">
                     <!-- Search -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Search</label>
-                        <input type="text" name="q" class="form-control" 
-                               value="{{ request.GET.q }}" placeholder="Search...">
+                    <div class="filter-section">
+                        <div class="filter-label">Search</div>
+                        <div class="input-group input-group-sm">
+                            <input type="text" name="q" class="form-control price-input"
+                                   value="{{ request.GET.q }}" placeholder="Search products...">
+                            <button class="btn btn-purple btn-sm" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
                     </div>
+
                     <!-- Category -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Category</label>
+                    <div class="filter-section">
+                        <div class="filter-label">Category</div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="category"
+                                   value="" {% if not request.GET.category %}checked{% endif %}>
+                            <label class="form-check-label small">All Categories</label>
+                        </div>
                         {% for category in categories %}
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" 
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio"
                                    name="category" value="{{ category.slug }}"
                                    {% if request.GET.category == category.slug %}checked{% endif %}>
-                            <label class="form-check-label">{{ category.name }}</label>
+                            <label class="form-check-label small">{{ category.name }}</label>
                         </div>
                         {% endfor %}
                     </div>
-                    <!-- Price Range -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Price Range</label>
-                        <input type="number" name="min_price" class="form-control mb-1" 
-                               placeholder="Min ₹" value="{{ request.GET.min_price }}">
-                        <input type="number" name="max_price" class="form-control" 
-                               placeholder="Max ₹" value="{{ request.GET.max_price }}">
+
+                    <!-- Price -->
+                    <div class="filter-section">
+                        <div class="filter-label">Price Range</div>
+                        <div class="d-flex gap-2">
+                            <input type="number" name="min_price" class="form-control price-input w-50"
+                                   placeholder="Min ₹" value="{{ request.GET.min_price }}">
+                            <input type="number" name="max_price" class="form-control price-input w-50"
+                                   placeholder="Max ₹" value="{{ request.GET.max_price }}">
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
-                    <a href="{% url 'product_list' %}" class="btn btn-outline-secondary w-100 mt-2">
-                        Clear
-                    </a>
+
+                    <!-- Company Type -->
+                    <div class="filter-section">
+                        <div class="filter-label">Supplier Type</div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="company_type" value="">
+                            <label class="form-check-label small">All Types</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="company_type" value="civil">
+                            <label class="form-check-label small">Civil Engineers</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="company_type" value="architect">
+                            <label class="form-check-label small">Architects</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="company_type" value="contractor">
+                            <label class="form-check-label small">Contractors</label>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="filter-section">
+                        <button type="submit" class="btn btn-purple w-100 btn-sm mb-2">
+                            <i class="bi bi-funnel me-1"></i>Apply Filters
+                        </button>
+                        <a href="{% url 'product_list' %}" class="btn btn-outline-purple w-100 btn-sm">
+                            Clear All
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>
-    </div>
 
-    <!-- Product Grid -->
-    <div class="col-md-9">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>Products 
-                <span class="badge bg-secondary">{{ products|length }} results</span>
-            </h4>
-        </div>
-        <div class="row g-3">
-            {% for product in products %}
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    {% if product.image_url %}
-                    <img src="{{ product.image_url }}" class="card-img-top" 
-                         style="height:180px; object-fit:cover;" alt="{{ product.name }}">
-                    {% else %}
-                    <div class="bg-light d-flex align-items-center justify-content-center" 
-                         style="height:180px;">
-                        <i class="bi bi-image text-secondary fs-1"></i>
-                    </div>
+        <!-- Product Grid -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <span class="fw-600" style="color:var(--text-primary)">{{ products|length }} products found</span>
+                    {% if request.GET.q %}
+                    <span class="ms-2 tag-pill">
+                        <i class="bi bi-search me-1"></i>"{{ request.GET.q }}"
+                    </span>
                     {% endif %}
-                    <div class="card-body">
-                        <span class="badge bg-primary mb-1">{{ product.category.name }}</span>
-                        <h6 class="card-title">{{ product.name }}</h6>
-                        <p class="card-text text-muted small">
-                            {{ product.description|truncatewords:10 }}
-                        </p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-success">₹{{ product.price }}</span>
-                            <a href="{% url 'product_detail' product.id %}" 
-                               class="btn btn-primary btn-sm">View</a>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted small">Sort by:</span>
+                    <select class="form-select form-select-sm" style="width:auto;border-color:var(--border-light);border-radius:8px;font-size:0.82rem;">
+                        <option>Newest</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Most Popular</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                {% for product in products %}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card h-100">
+                        <div class="card-img-placeholder" style="height:170px;">
+                            <i class="bi bi-box-seam"></i>
+                            <span>{{ product.category.name }}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="product-badge">{{ product.category.name }}</span>
+                                <a href="#" class="text-muted" style="font-size:0.95rem;">
+                                    <i class="bi bi-heart"></i>
+                                </a>
+                            </div>
+                            <h6 class="card-title fw-600 mb-1">{{ product.name }}</h6>
+                            <p class="card-text text-muted small mb-3">
+                                {{ product.description|truncatewords:10 }}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price-tag">₹{{ product.price }}</span>
+                                <a href="{% url 'product_detail' product.id %}" class="btn btn-purple btn-sm">
+                                    View
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-footer-custom">
+                            <i class="bi bi-building me-1"></i>{{ product.company.name }}
+                            {% if product.company.verified %}
+                            <i class="bi bi-patch-check-fill ms-1" style="color:var(--accent-teal)" title="Verified"></i>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="card-footer text-muted small">
-                        <i class="bi bi-building"></i> {{ product.company.name }}
-                    </div>
                 </div>
-            </div>
-            {% empty %}
-            <div class="col-12">
-                <div class="alert alert-info">
-                    No products found. Try different filters.
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <i class="bi bi-search" style="font-size:3rem;color:var(--purple-mid);opacity:0.5"></i>
+                    <h5 class="mt-3" style="color:var(--text-primary)">No products found</h5>
+                    <p class="text-muted">Try adjusting your filters or search terms.</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-purple">Clear Filters</a>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </div>
 </div>

@@ -1,74 +1,201 @@
 {% extends 'catalog/base.html' %}
-
-{% block title %}BuildingWorld — Home{% endblock %}
+{% block title %}BuildTech World — Find anything, from anyone{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<div class="p-5 mb-4 bg-dark text-white rounded-3">
-    <div class="container-fluid py-3">
-        <h1 class="display-5 fw-bold">
-            <i class="bi bi-building"></i> BuildTech World
-        </h1>
-        <p class="col-md-8 fs-4">
-            Your one-stop marketplace for construction products, architectural plans, 
-            and interior design solutions.
-        </p>
-        <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">
-            Browse Products <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-</div>
 
-<!-- Category Cards -->
-<h2 class="mb-4">Browse by Category</h2>
-<div class="row g-3 mb-5">
-    {% for category in categories %}
-    <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center py-4">
-                <i class="bi bi-grid fs-1 text-primary"></i>
-                <h5 class="card-title mt-2">{{ category.name }}</h5>
-                <a href="{% url 'product_list' %}?category={{ category.slug }}" 
-                   class="btn btn-outline-primary btn-sm mt-2">
-                    View Products
-                </a>
+<!-- Hero -->
+<section class="hero-section">
+    <div class="container position-relative" style="z-index:1">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="hero-badge">
+                    <i class="bi bi-lightning-charge me-1"></i> General Marketplace
+                </div>
+                <h1 class="hero-title">
+                    Find <span>anything</span>,<br>from anyone.
+                </h1>
+                <p class="hero-subtitle">
+                    Browse products from sellers across every category — all in one place.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{% url 'product_list' %}" class="btn btn-purple">
+                        Browse Products <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                    <a href="#" class="btn btn-ghost">
+                        <i class="bi bi-building me-1"></i> Become a Seller
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-number">10K+</div>
+                        <div class="hero-stat-label">Products</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-number">300+</div>
+                        <div class="hero-stat-label">Sellers</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-number">50+</div>
+                        <div class="hero-stat-label">Categories</div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    {% empty %}
-    <p class="text-muted">No categories yet.</p>
-    {% endfor %}
-</div>
-
-<!-- Featured Products -->
-<h2 class="mb-4">Latest Products</h2>
-<div class="row g-3">
-    {% for product in latest_products %}
-    <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            {% if product.image_url %}
-            <img src="{{ product.image_url }}" class="card-img-top" 
-                 style="height:200px; object-fit:cover;" alt="{{ product.name }}">
-            {% else %}
-            <div class="bg-secondary d-flex align-items-center justify-content-center" 
-                 style="height:200px;">
-                <i class="bi bi-image text-white fs-1"></i>
-            </div>
-            {% endif %}
-            <div class="card-body">
-                <span class="badge bg-primary mb-1">{{ product.category.name }}</span>
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="fw-bold text-success">₹{{ product.price }}</span>
-                    <a href="{% url 'product_detail' product.id %}" 
-                       class="btn btn-primary btn-sm">View</a>
+            <div class="col-lg-5 d-none d-lg-flex justify-content-center">
+                <div style="font-size:10rem;opacity:0.12;color:#fff;line-height:1;">
+                    <i class="bi bi-shop"></i>
                 </div>
             </div>
         </div>
     </div>
-    {% empty %}
-    <p class="text-muted">No products yet. Add some from the admin panel.</p>
-    {% endfor %}
+</section>
+
+<!-- Trust bar -->
+<div style="background:#fff;border-bottom:1px solid var(--border-light);padding:0.9rem 0;">
+    <div class="container">
+        <div class="row text-center g-2">
+            <div class="col-6 col-md-3">
+                <span style="font-size:0.78rem;color:var(--text-muted);font-weight:600;">
+                    <i class="bi bi-patch-check-fill me-1" style="color:var(--purple-primary)"></i>VERIFIED SELLERS
+                </span>
+            </div>
+            <div class="col-6 col-md-3">
+                <span style="font-size:0.78rem;color:var(--text-muted);font-weight:600;">
+                    <i class="bi bi-shield-lock-fill me-1" style="color:var(--accent-teal)"></i>SAFE PAYMENTS
+                </span>
+            </div>
+            <div class="col-6 col-md-3">
+                <span style="font-size:0.78rem;color:var(--text-muted);font-weight:600;">
+                    <i class="bi bi-truck me-1" style="color:var(--accent-gold)"></i>FAST DELIVERY
+                </span>
+            </div>
+            <div class="col-6 col-md-3">
+                <span style="font-size:0.78rem;color:var(--text-muted);font-weight:600;">
+                    <i class="bi bi-headset me-1" style="color:var(--accent-rose)"></i>24/7 SUPPORT
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Categories -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-4">
+            <div class="section-label">Shop by Category</div>
+            <h2 class="section-title">What are you looking for?</h2>
+            <hr class="section-divider mx-auto">
+        </div>
+        <div class="row g-3">
+            {% for category in categories %}
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{% url 'product_list' %}?category={{ category.slug }}"
+                   class="category-card">
+                    <i class="bi bi-grid category-icon"></i>
+                    <div class="category-name">{{ category.name }}</div>
+                    <div class="category-count">Browse</div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-muted py-4">
+                No categories yet — add some from the admin panel.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Latest Products -->
+<section class="py-5" style="background:#fff;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <div class="section-label">Just Added</div>
+                <h2 class="section-title mb-0">Latest Products</h2>
+                <hr class="section-divider mb-0">
+            </div>
+            <a href="{% url 'product_list' %}" class="btn btn-outline-purple">
+                View All <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+        <div class="row g-4">
+            {% for product in latest_products %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-img-placeholder">
+                        <i class="bi bi-box-seam"></i>
+                        <span>{{ product.category.name }}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="product-badge">{{ product.category.name }}</span>
+                            <a href="#" class="text-muted" style="font-size:1rem;">
+                                <i class="bi bi-heart"></i>
+                            </a>
+                        </div>
+                        <h6 class="fw-600 mb-1">{{ product.name }}</h6>
+                        <p class="text-muted small mb-3">
+                            {{ product.description|truncatewords:12 }}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-tag">₹{{ product.price }}</span>
+                            <a href="{% url 'product_detail' product.id %}"
+                               class="btn btn-purple btn-sm">View</a>
+                        </div>
+                    </div>
+                    <div class="card-footer-custom">
+                        <i class="bi bi-building me-1"></i>{{ product.company.name }}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5 text-muted">
+                <i class="bi bi-box-seam" style="font-size:3rem;opacity:0.3"></i>
+                <p class="mt-2">No products yet. Add some from the admin panel.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Why Us -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-4">
+            <div class="section-label">Why Brandify</div>
+            <h2 class="section-title">Why use BuildTech World?</h2>
+            <hr class="section-divider mx-auto">
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon-wrap"><i class="bi bi-patch-check"></i></div>
+                    <h6 class="fw-700 mb-2">Verified Sellers</h6>
+                    <p class="text-muted small mb-0">Every seller on our platform is reviewed before listing products.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon-wrap"><i class="bi bi-grid-3x3-gap"></i></div>
+                    <h6 class="fw-700 mb-2">All Categories</h6>
+                    <p class="text-muted small mb-0">From electronics to fashion to home goods — everything in one place.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon-wrap"><i class="bi bi-chat-dots"></i></div>
+                    <h6 class="fw-700 mb-2">Direct Contact</h6>
+                    <p class="text-muted small mb-0">Connect directly with sellers and get the best deal without middlemen.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon-wrap"><i class="bi bi-graph-up-arrow"></i></div>
+                    <h6 class="fw-700 mb-2">Best Prices</h6>
+                    <p class="text-muted small mb-0">Compare across multiple sellers and always find the most competitive price.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}
