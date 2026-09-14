@@ -9,9 +9,30 @@ class Category(models.Model):
 
 class Company(models.Model):
     COMPANY_TYPES = [
+        # Retail & Commerce
+        ('retailer', 'Retailer'),
+        ('wholesaler', 'Wholesaler'),
+        ('distributor', 'Distributor'),
+        ('manufacturer', 'Manufacturer'),
+        # Tech
+        ('tech_startup', 'Tech Startup'),
+        ('software', 'Software Company'),
+        ('electronics', 'Electronics Brand'),
+        # Services
+        ('freelancer', 'Freelancer'),
+        ('agency', 'Agency'),
+        ('consultant', 'Consultant'),
+        # Construction (kept since models exist)
         ('civil', 'Civil Engineer'),
         ('architect', 'Architect'),
         ('contractor', 'Contractor'),
+        # Others
+        ('fashion', 'Fashion Brand'),
+        ('food', 'Food & Beverage'),
+        ('healthcare', 'Healthcare'),
+        ('education', 'Education'),
+        ('logistics', 'Logistics & Delivery'),
+        ('other', 'Other'),
     ]
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=20, choices=COMPANY_TYPES)
@@ -26,7 +47,6 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
-    image_url = models.URLField(blank=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -40,7 +60,6 @@ class Plan(models.Model):
         ('industrial', 'Industrial'),
     ]
     title = models.CharField(max_length=200)
-    blueprint_image = models.URLField(blank=True)
     area_sqft = models.DecimalField(max_digits=8, decimal_places=2)
     style = models.CharField(max_length=50, choices=STYLE_CHOICES)
     rooms = models.PositiveIntegerField()
@@ -50,7 +69,6 @@ class Plan(models.Model):
 
     def __str__(self):
         return self.title
-
 
 class InteriorDesign(models.Model):
     ROOM_TYPES = [
@@ -62,8 +80,7 @@ class InteriorDesign(models.Model):
     ]
     room_type = models.CharField(max_length=50, choices=ROOM_TYPES)
     style = models.CharField(max_length=50)
-    images = models.URLField(blank=True)
-    plan = models.ForeignKey(Plan, on_delete=models.SET_NULL, 
+    plan = models.ForeignKey(Plan, on_delete=models.SET_NULL,
                              null=True, blank=True)
     products_used = models.ManyToManyField(Product, blank=True)
 
